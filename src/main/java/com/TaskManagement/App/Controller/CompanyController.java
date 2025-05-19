@@ -1,0 +1,38 @@
+package com.TaskManagement.App.Controller;
+
+
+import com.TaskManagement.App.Model.Company;
+import com.TaskManagement.App.Service.CompanyService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Optional;
+
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/api/company")
+public class CompanyController {
+
+    private final CompanyService companyService;
+
+    @PreAuthorize("hasAnyRole('ADMIN','SUPERVISOR')")
+    @GetMapping("/")
+    public ResponseEntity<List<Company>> getAllCompany() {
+        List<Company> companies = companyService.getAllCompany();
+        return ResponseEntity.ok(companies);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','SUPERVISOR')")
+    @GetMapping("/{id}")
+    public ResponseEntity<Company> getCompanyById(@PathVariable Long id) {
+        Optional<Company> company = companyService.getCompanyById(id);
+        return company.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+}

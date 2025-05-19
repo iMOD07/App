@@ -1,0 +1,14 @@
+For the first time
+git clone https://github.com/iMOD07/TasksManagement.git
+----
+Before Update
+git pull
+-----
+After Update
+git add .
+git commit -m "error 2025/05/14, 5:10PM"
+git push
+
+
+git fetch --all
+git reset --hard origin/main
