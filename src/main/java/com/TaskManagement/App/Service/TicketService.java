@@ -1,6 +1,7 @@
 package com.TaskManagement.App.Service;
 
-import com.TaskManagement.App.Exception.ResourceNotFoundException;
+
+import com.TaskManagement.App.Exception.ApiException;
 import com.TaskManagement.App.Model.*;
 import com.TaskManagement.App.Repository.TicketRepository;
 import com.TaskManagement.App.Repository.UserAdminRepository;
@@ -38,6 +39,17 @@ public class TicketService {
         UserClient userClient = userClientRepository.findByEmail(clientEmail)
                 .orElseThrow(() -> new RuntimeException("Client not found"));
 
+        // Make Sure Client don't have any ticket
+        List<TicketStatus> activeStatuses = List.of(
+                TicketStatus.IN_CREATION,
+                TicketStatus.IN_PROGRESS,
+                TicketStatus.OPEN
+        );
+        long count = ticketRepository.countByClientAndTicketStatusIn(userClient, activeStatuses);
+        if (count> 0) {
+            // throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"You already have an active ticket.");
+            throw new ApiException("لديك تذكرة مفتوحة بالفعل", "You already have an active ticket");
+        }
 
         Ticket ticket = new Ticket();
         ticket.setTitle(title);

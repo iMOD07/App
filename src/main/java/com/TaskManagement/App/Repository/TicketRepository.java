@@ -18,4 +18,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     boolean existsByClientAndTicketStatus(UserClient client, TicketStatus status);
     boolean existsByClient(UserClient client);
 
+    long countByClientAndTicketStatusIn(UserClient client, List<TicketStatus> statuses);
+
+
 }

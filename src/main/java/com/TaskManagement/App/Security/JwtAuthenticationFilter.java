@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -22,7 +21,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final CustomUserDetailsService userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain chain)
             throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
@@ -34,27 +35,34 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        token = authHeader.substring(7);
+        token = authHeader.substring(7); // remove "Bearer "
         try {
-            username = jwtUtil.extractUsername(token);
+            username = jwtUtil.extractUsername(token); // e.g. email
         } catch (Exception e) {
-            System.out.println("❌ Failed to parse token: " + e.getMessage());
-            chain.doFilter(request, response);
+            chain.doFilter(request, response); // invalid token
             return;
         }
 
+        // إذا المستخدم ما تم التحقق منه من قبل
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
+            // ✅ أهم جزء: إذا التوكن صحيح، أضف المستخدم للسياق
             if (jwtUtil.validateToken(token, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities() // يحتوي على ROLE_...
+                        );
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                // 👇 هذا اللي يخلي Spring Security يشتغل
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
 
-        chain.doFilter(request, response);
+        chain.doFilter(request, response); // أكمل للسلسلة
     }
 }

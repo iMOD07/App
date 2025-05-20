@@ -40,7 +40,7 @@ public class AuthController {
             String token = jwtUtil.generateToken(buildUserDetails(client.get(), "ROLE_CLIENT"));
             return ResponseEntity.ok(new AuthResponse(token, "CLIENT"));
         }
-        return ResponseEntity.status(401).body("❌ Invalid client credentials");
+        return ResponseEntity.status(401).body("Client login failed");
     }
 
     // ✅ تسجيل دخول الموظف
@@ -51,7 +51,7 @@ public class AuthController {
             String token = jwtUtil.generateToken(buildUserDetails(employee.get(), "ROLE_EMPLOYEE"));
             return ResponseEntity.ok(new AuthResponse(token, "EMPLOYEE"));
         }
-        return ResponseEntity.status(401).body("❌ Invalid employee credentials");
+        return ResponseEntity.status(401).body("Employee login failed");
     }
 
     // ✅ تسجيل دخول الأدمن
@@ -62,14 +62,14 @@ public class AuthController {
             String token = jwtUtil.generateToken(buildUserDetails(admin.get(), "ROLE_ADMIN"));
             return ResponseEntity.ok(new AuthResponse(token, "ADMIN"));
         }
-        return ResponseEntity.status(401).body("❌ Invalid admin credentials");
+        return ResponseEntity.status(401).body("ADMIN login failed");
     }
 
     // ✅ تسجيل عميل + JWT
     @PostMapping("/register/client")
     public ResponseEntity<?> registerClient(@RequestBody ClientRegisterRequest request) {
         if (userClientRepository.findByEmail(request.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("❌ Email already exists.");
+            return ResponseEntity.badRequest().body("Email already exists.");
         }
 
         UserClient client = userClientService.registerClient(
@@ -89,7 +89,7 @@ public class AuthController {
     @PostMapping("/register/employee")
     public ResponseEntity<?> registerEmployee(@RequestBody EmployeeRegisterRequest request) {
         if (userEmployeeRepository.findByEmail(request.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("❌ Email already exists.");
+            return ResponseEntity.badRequest().body("Email already exists.");
         }
 
         UserEmployee employee = userEmployeeService.registerEmployee(
