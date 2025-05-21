@@ -54,7 +54,7 @@ public class TicketController {
 
     // Just ADMIN he Get All Ticket
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<List<Ticket>> getAllTicket() {
         List<Ticket> all = ticketService.getAllTicket();
         System.out.println("admin Admin fetched all tickets, count = " + all.size());
@@ -67,14 +67,19 @@ public class TicketController {
     public ResponseEntity<List<Ticket>> getUserTickets(@PathVariable("userId") Long userId,
                                                        Authentication authentication) {
 
-        UserClient current = securityUtils.getCurrentClient(authentication);
-
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        UserClient current = null;
+        if (!isAdmin) {
+            current = securityUtils.getCurrentClient(authentication);
+        }
+
         List<Ticket> tickets = ticketService.getTicketsByUser(userId, current, isAdmin);
 
         return ResponseEntity.ok(tickets);
     }
+
 
 
     // Delete ticket

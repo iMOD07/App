@@ -13,9 +13,11 @@ public class SecurityUtils {
     private final UserClientRepository userClientRepository;
 
     // ✅ استخراج العميل الحالي من Authentication
-    public UserClient getCurrentClient(Authentication authentication) {
-        String email = authentication.getName();
+    public UserClient getCurrentClient(Authentication auth) {
+        String email = auth.getName();
         return userClientRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Client not found for email: " + email));
     }
+
+
 }

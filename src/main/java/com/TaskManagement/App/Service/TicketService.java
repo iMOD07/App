@@ -47,7 +47,6 @@ public class TicketService {
         );
         long count = ticketRepository.countByClientAndTicketStatusIn(userClient, activeStatuses);
         if (count> 0) {
-            // throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"You already have an active ticket.");
             throw new ApiException("لديك تذكرة مفتوحة بالفعل", "You already have an active ticket");
         }
 
