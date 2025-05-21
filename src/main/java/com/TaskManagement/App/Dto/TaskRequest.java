@@ -38,6 +38,6 @@ public class TaskRequest {
     private LocalDateTime dueDate;
 
 
-    private Long connect_to;
+    private Long connectTo;
 
 }

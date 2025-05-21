@@ -1,6 +1,7 @@
 package com.TaskManagement.App.Controller;
 
 import com.TaskManagement.App.Dto.TaskRequest;
+import com.TaskManagement.App.Exception.ApiException;
 import com.TaskManagement.App.Model.Task;
 import com.TaskManagement.App.Model.TaskStatus;
 import com.TaskManagement.App.Repository.TaskRepository;
@@ -34,7 +35,7 @@ public class TaskController {
                 request.getStatus(),
                 request.getAssignedToId(),
                 request.getDueDate(),
-                request.getConnect_to()
+                request.getConnectTo()
         );
 
         return ResponseEntity.ok(task);

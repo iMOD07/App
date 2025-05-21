@@ -9,4 +9,7 @@ public interface UserClientRepository extends JpaRepository<UserClient, Long> {
 
     boolean existsByMobileNumber(String mobileNumber);
     boolean existsByEmail(String email);
+
+
+
 }

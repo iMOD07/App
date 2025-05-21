@@ -41,6 +41,6 @@ public class Task {
 
     @OneToOne
     @JoinColumn(name = "connect_to")
-    private UserClient connect_to;
+    private UserClient connectTo;
 
 }

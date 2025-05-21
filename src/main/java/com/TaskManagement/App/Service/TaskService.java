@@ -1,5 +1,6 @@
 package com.TaskManagement.App.Service;
 
+import com.TaskManagement.App.Exception.ApiException;
 import com.TaskManagement.App.Model.Task;
 import com.TaskManagement.App.Model.TaskStatus;
 import com.TaskManagement.App.Model.UserClient;
@@ -20,9 +21,9 @@ import java.util.Optional;
 public class TaskService {
 
 
-    private TaskRepository taskRepository;
-    private UserEmployeeRepository userEmployeeRepository;
-    private UserClientRepository userClientRepository;
+    private final TaskRepository taskRepository;
+    private final UserEmployeeRepository userEmployeeRepository;
+    private final UserClientRepository userClientRepository;
 
 
     // Create a new task (used by Admin)
@@ -31,16 +32,20 @@ public class TaskService {
                            String status,
                            Long assignedTo,
                            LocalDateTime dueDate,
-                           Long connect_to) {
+                           Long connectTo) {
         Optional<UserEmployee> user = userEmployeeRepository.findById(assignedTo);
-        Optional<UserClient> userClient = userClientRepository.findById(connect_to);
+        Optional<UserClient> userClient = userClientRepository.findById(connectTo);
 
         if (user.isEmpty()) {
-            throw new RuntimeException("User not found!");
+            throw new ApiException("الموظف غير موجود", "Employee not found");
         }
         if (userClient.isEmpty()) {
-            throw new RuntimeException("Client not found!");
+            throw new ApiException("العميل غير موجود", "Client not found");
         }
+        if (taskRepository.existsByConnectTo(userClient.get())) {
+            throw new ApiException("هذا العميل لديه مهمة بالفعل", "Client already has a task.");
+        }
+
 
         Task task = Task.builder()
                 .title(title)
@@ -48,7 +53,7 @@ public class TaskService {
                 .status(TaskStatus.PENDING)
                 .assignedTo(user.get())
                 .dueDate(dueDate)
-                .connect_to(userClient.get())
+                .connectTo(userClient.get())
                 .createdAt(LocalDateTime.now())
                 .build();
         return taskRepository.save(task);
