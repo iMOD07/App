@@ -79,46 +79,46 @@ public class TicketService {
     }
 
 
-    // Get Ticket By User
-    public List<Ticket> getTicketsByUser(Long userId, UserClient currentClient, boolean isAdmin) {
+    // Get Ticket By User (ADMIN User)
+    public List<Ticket> getTicketsByUserId(Long userId) {
+        UserClient userClient = userClientRepository.findById(userId)
+                .orElseThrow(()-> new ApiException("لم يتم العثور على العميل","Client not found"));
 
-        // 1 You must check with the client first
-        UserClient userclient = userClientRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-
-        // 2 If you are not an ADMIN and you want to view tickets other than your ticket => forbidden
-        if (!isAdmin && !currentClient.getId().equals(userclient.getId())) {
-            throw new AccessDeniedException("You can only view your own tickets");
-        }
-
-        // 3 Get Ticket
         List<Ticket> tickets = ticketRepository.findByClientId(userId);
         if (tickets.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No tickets for this user");
+            throw new ApiException("لم يتم العثور على تذاكر لهذا المستخدم","No tickets found for this user");
         }
         return tickets;
     }
 
 
-
-
-    // Delete Ticket
-    public void deleteTicket(Long ticketId, Long clientId) {
-        Ticket ticket = ticketRepository.findById(ticketId)
-                .orElseThrow(() -> new RuntimeException("Ticket not found"));
-
-        // check that the ticket holder is the authenticated customer
-        if (!ticket.getClient().getId().equals(clientId)) {
-            throw new AccessDeniedException("You can only delete your own ticket");
+    // For client only (to view their tickets)
+    public List<Ticket> getTicketsForCurrentClient(UserClient currentClient){
+        List<Ticket> tickets = ticketRepository.findByClientId(currentClient.getId());
+        if (tickets.isEmpty()) {
+            throw new ApiException("ليس لديك تذاكر","You have no tickets");
         }
+        return tickets;
+    }
+
+
+    // Client can delete only their own ticket
+    public void deleteTicketByClient(UserClient client) {
+        List<Ticket> tickets = ticketRepository.findByClientId(client.getId());
+
+        if (tickets.isEmpty()) {
+            throw new ApiException("ليس لديك تذاكر", "You have no tickets");
+        }
+        ticketRepository.delete(tickets.get(0));
+    }
+
+
+    // Admin can delete any ticket for a specific user
+    public void deleteTicketByAdmin(Long ticketId) {
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new ApiException(" لا يوجد تذكرة بهذا الرقم","There is no ticket for this number."));
         ticketRepository.delete(ticket);
     }
 
-    // Deleted by admin: No ownership verification
-    public void deleteTicket(Long ticketId) {
-        Ticket ticket = ticketRepository.findById(ticketId)
-                .orElseThrow(() -> new RuntimeException("Ticket Not Found"));
-        ticketRepository.delete(ticket);
-    }
 
 }

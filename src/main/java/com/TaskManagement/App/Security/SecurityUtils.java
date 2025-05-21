@@ -19,5 +19,4 @@ public class SecurityUtils {
                 .orElseThrow(() -> new RuntimeException("Client not found for email: " + email));
     }
 
-
 }

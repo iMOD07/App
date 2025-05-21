@@ -61,50 +61,42 @@ public class TicketController {
         return ResponseEntity.ok(all);
     }
 
-
-    @PreAuthorize("hasAnyRole('CLIENT','ADMIN')")
+    // For ADMIN : View any Client tickets by ID
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Ticket>> getUserTickets(@PathVariable("userId") Long userId,
-                                                       Authentication authentication) {
+    public ResponseEntity<List<Ticket>> getTicketsByUser (@PathVariable Long userId) {
+        List<Ticket> tickets = ticketService.getTicketsByUserId(userId);
+        return ResponseEntity.ok(tickets);
+    }
 
-        boolean isAdmin = authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-
-        UserClient current = null;
-        if (!isAdmin) {
-            current = securityUtils.getCurrentClient(authentication);
-        }
-
-        List<Ticket> tickets = ticketService.getTicketsByUser(userId, current, isAdmin);
-
+    // For the Client : He only sees his tickets
+    @PreAuthorize("hasRole('CLIENT')")
+    @GetMapping("/my-tickets")
+    public ResponseEntity<List<Ticket>> getClientTickets(Authentication authentication) {
+        UserClient current = securityUtils.getCurrentClient(authentication);
+        List<Ticket> tickets = ticketService.getTicketsForCurrentClient(current);
         return ResponseEntity.ok(tickets);
     }
 
 
+    // Delete ticket by customer (only his ticket)
+    @PreAuthorize("hasRole('CLIENT')")
+    @DeleteMapping("/client/deleteMyTicket")
+    public ResponseEntity<String> deleteMyTicket(Authentication authentication) {
 
-    // Delete ticket
-    @PreAuthorize("hasAnyRole('CLIENT','ADMIN')")
-    @DeleteMapping("/{ticketId}")
-    public ResponseEntity<String> deleteTicket(@PathVariable Long ticketId,
-                                               Authentication authentication) {
-        UserClient currentUser = (UserClient) authentication.getPrincipal();
+        UserClient current = securityUtils.getCurrentClient(authentication);
 
-        if (currentUser.getRole() == Role.CLIENT){
-            // Client: Delete only his tickets
-            ticketService.deleteTicket(ticketId, currentUser.getId());
-        } else if (currentUser.getRole().name().equals("ADMIN")) {
-            // Admin: Delete any ticket without needing user ID
-            ticketService.deleteTicket(ticketId);
-        }
+        ticketService.deleteTicketByClient(current);
+
         return ResponseEntity.ok("Ticket deleted successfully");
     }
 
-
-
-
-
-
-
-
+    // Delete ticket by Just ADMIN
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/admin/{ticketId}")
+    public ResponseEntity<String> deleteTicketByAdmin(@PathVariable Long ticketId) {
+        ticketService.deleteTicketByAdmin(ticketId);
+        return ResponseEntity.ok("Ticket deleted successfully");
+    }
 
 }

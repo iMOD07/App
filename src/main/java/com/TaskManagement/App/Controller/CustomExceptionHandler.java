@@ -14,4 +14,6 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body("You do not have permission to access.");
     }
+
+
 }
