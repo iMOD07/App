@@ -8,6 +8,7 @@ public class ApiException extends RuntimeException {
         super(messageEn); // for logs/debug
         this.messageAr = messageAr;
         this.messageEn = messageEn;
+
     }
 
     public String getMessageAr() {

@@ -46,7 +46,6 @@ public class TaskService {
             throw new ApiException("هذا العميل لديه مهمة بالفعل", "Client already has a task.");
         }
 
-
         Task task = Task.builder()
                 .title(title)
                 .description(description)
