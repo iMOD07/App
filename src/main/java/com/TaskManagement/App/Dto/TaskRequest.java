@@ -38,6 +38,10 @@ public class TaskRequest {
     private LocalDateTime dueDate;
 
 
-    private Long connectTo;
+    private Long ticketId; // ✅ فقط هذا الحقل إذا مو مضاف عندك
+
+
+
+
 
 }

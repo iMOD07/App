@@ -21,4 +21,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     long countByClientAndTicketStatusIn(UserClient client, List<TicketStatus> statuses);
 
 
+
+
+
 }

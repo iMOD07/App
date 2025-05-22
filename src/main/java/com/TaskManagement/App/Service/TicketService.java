@@ -57,6 +57,7 @@ public class TicketService {
         ticket.setAssignedToAdmin(admin);
         ticket.setTicketStatus(TicketStatus.IN_CREATION);
         ticket.setCreatedAt(LocalDateTime.now());
+        ticket.setCreatedBy(userClient);
         return ticketRepository.save(ticket);
     }
 

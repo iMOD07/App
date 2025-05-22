@@ -56,4 +56,11 @@ public class Task {
     private UserClient connectTo;
 
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ticket_id", nullable = false) // ✅ اسم العمود في الجدول
+    private Ticket ticket; // ✅ الربط بالتذكرة
+
+
+
+
 }

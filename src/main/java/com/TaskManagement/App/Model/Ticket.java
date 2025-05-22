@@ -52,5 +52,11 @@ public class Ticket {
     @Column(name = "ticket_status")
     private TicketStatus ticketStatus = TicketStatus.IN_CREATION;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "created_by") // يفضل التأكد أن اسم العمود فعلاً created_by في الجدول
+    private UserClient createdBy;
+
+
+
 
 }

@@ -1,11 +1,9 @@
 package com.TaskManagement.App.Service;
 
 import com.TaskManagement.App.Exception.ApiException;
-import com.TaskManagement.App.Model.Task;
-import com.TaskManagement.App.Model.TaskStatus;
-import com.TaskManagement.App.Model.UserClient;
-import com.TaskManagement.App.Model.UserEmployee;
+import com.TaskManagement.App.Model.*;
 import com.TaskManagement.App.Repository.TaskRepository;
+import com.TaskManagement.App.Repository.TicketRepository;
 import com.TaskManagement.App.Repository.UserClientRepository;
 import com.TaskManagement.App.Repository.UserEmployeeRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +20,10 @@ public class TaskService {
 
 
     private final TaskRepository taskRepository;
+    private final TicketRepository ticketRepository;
     private final UserEmployeeRepository userEmployeeRepository;
     private final UserClientRepository userClientRepository;
+
 
 
     // Create a new task (used by Admin)
@@ -32,17 +32,26 @@ public class TaskService {
                            String status,
                            Long assignedTo,
                            LocalDateTime dueDate,
-                           Long connectTo) {
-        Optional<UserEmployee> user = userEmployeeRepository.findById(assignedTo);
-        Optional<UserClient> userClient = userClientRepository.findById(connectTo);
+                           Long ticketId) {
 
+        Optional<UserEmployee> user = userEmployeeRepository.findById(assignedTo);
         if (user.isEmpty()) {
             throw new ApiException("الموظف غير موجود", "Employee not found");
         }
-        if (userClient.isEmpty()) {
+
+        Optional<Ticket> ticketOptional = ticketRepository.findById(ticketId);
+        if (ticketOptional.isEmpty()) {
+            throw new ApiException("رقم التذكرة غير موجود", "Ticket not found");
+        }
+
+        Ticket ticket = ticketOptional.get();
+        UserClient userClient = ticket.getCreatedBy();
+
+        if (userClient == null) {
             throw new ApiException("العميل غير موجود", "Client not found");
         }
-        if (taskRepository.existsByConnectTo(userClient.get())) {
+
+        if (taskRepository.existsByConnectTo(userClient)) {
             throw new ApiException("هذا العميل لديه مهمة بالفعل", "Client already has a task.");
         }
 
@@ -52,11 +61,14 @@ public class TaskService {
                 .status(TaskStatus.PENDING)
                 .assignedTo(user.get())
                 .dueDate(dueDate)
-                .connectTo(userClient.get())
+                .connectTo(userClient)
                 .createdAt(LocalDateTime.now())
+                .ticket(ticket)
                 .build();
+
         return taskRepository.save(task);
     }
+
 
     // Update tasks in use (role admin only)
     public Task updateTask(Long taskId,

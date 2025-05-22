@@ -4,7 +4,9 @@ import com.TaskManagement.App.Dto.TaskRequest;
 import com.TaskManagement.App.Exception.ApiException;
 import com.TaskManagement.App.Model.Task;
 import com.TaskManagement.App.Model.TaskStatus;
+import com.TaskManagement.App.Model.Ticket;
 import com.TaskManagement.App.Repository.TaskRepository;
+import com.TaskManagement.App.Repository.TicketRepository;
 import com.TaskManagement.App.Service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ public class TaskController {
 
     private final TaskService taskService;
     private final TaskRepository taskRepository;
+    private final TicketRepository ticketRepository;
 
 
     // create tasks by ADMIN
@@ -35,7 +38,7 @@ public class TaskController {
                 request.getStatus(),
                 request.getAssignedToId(),
                 request.getDueDate(),
-                request.getConnectTo()
+                request.getTicketId()
         );
 
         return ResponseEntity.ok(task);
