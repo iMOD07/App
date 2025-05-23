@@ -1,10 +1,8 @@
 package com.TaskManagement.App.Controller;
-
 import com.TaskManagement.App.Dto.AuthResponse;
 import com.TaskManagement.App.Dto.ClientRegisterRequest;
 import com.TaskManagement.App.Dto.EmployeeRegisterRequest;
 import com.TaskManagement.App.Dto.LoginRequest;
-import com.TaskManagement.App.Exception.ApiException;
 import com.TaskManagement.App.Model.UserAdmin;
 import com.TaskManagement.App.Model.UserClient;
 import com.TaskManagement.App.Model.UserEmployee;
@@ -33,7 +31,8 @@ public class AuthController {
     private final UserClientService userClientService;
     private final UserEmployeeService userEmployeeService;
 
-    // ✅ تسجيل دخول العميل
+
+    // Log in Client
     @PostMapping("/login/client")
     public ResponseEntity<?> loginClient(@RequestBody LoginRequest request) {
         var client = userClientRepository.findByEmail(request.getEmail());
@@ -44,7 +43,8 @@ public class AuthController {
         return ResponseEntity.status(401).body("Client login failed");
     }
 
-    // ✅ تسجيل دخول الموظف
+
+    // Log in Employee
     @PostMapping("/login/employee")
     public ResponseEntity<?> loginEmployee(@RequestBody LoginRequest request) {
         var employee = userEmployeeRepository.findByEmail(request.getEmail());
@@ -55,7 +55,8 @@ public class AuthController {
         return ResponseEntity.status(401).body("Employee login failed");
     }
 
-    // ✅ تسجيل دخول الأدمن
+
+    // Log in ADMIN
     @PostMapping("/login/admin")
     public ResponseEntity<?> loginAdmin(@RequestBody LoginRequest request) {
         var admin = userAdminRepository.findByEmail(request.getEmail());
@@ -66,7 +67,8 @@ public class AuthController {
         return ResponseEntity.status(401).body("ADMIN login failed");
     }
 
-    // ✅ تسجيل عميل + JWT
+
+    // Create New client
     @PostMapping("/register/client")
     public ResponseEntity<?> registerClient(@RequestBody ClientRegisterRequest request) {
         if (userClientRepository.findByEmail(request.getEmail()).isPresent()) {
@@ -83,7 +85,7 @@ public class AuthController {
         );
 
         String token = jwtUtil.generateToken(buildUserDetails(client, "ROLE_CLIENT"));
-        return ResponseEntity.ok(new AuthResponse(token, "Client registration has been successful."));
+        return ResponseEntity.ok(new AuthResponse(token, "CLIENT"));
 
 
     }
