@@ -8,6 +8,7 @@ import com.TaskManagement.App.Model.Ticket;
 import com.TaskManagement.App.Repository.TaskRepository;
 import com.TaskManagement.App.Repository.TicketRepository;
 import com.TaskManagement.App.Service.TaskService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,7 +30,7 @@ public class TaskController {
     // create tasks by ADMIN
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
-    public ResponseEntity<Task> createTask(@RequestBody TaskRequest request,
+    public ResponseEntity<Task> createTask(@Valid @RequestBody TaskRequest request,
                                            Authentication authentication) {
 
         Task task = taskService.createTask(

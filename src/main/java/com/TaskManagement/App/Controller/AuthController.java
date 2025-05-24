@@ -12,6 +12,7 @@ import com.TaskManagement.App.Repository.UserEmployeeRepository;
 import com.TaskManagement.App.Security.JwtUtil;
 import com.TaskManagement.App.Service.UserClientService;
 import com.TaskManagement.App.Service.UserEmployeeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
@@ -34,7 +35,7 @@ public class AuthController {
 
     // Log in Client
     @PostMapping("/login/client")
-    public ResponseEntity<?> loginClient(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> loginClient(@Valid @RequestBody LoginRequest request) {
         var client = userClientRepository.findByEmail(request.getEmail());
         if (client.isPresent() && passwordEncoder.matches(request.getPassword(), client.get().getPasswordHash())) {
             String token = jwtUtil.generateToken(buildUserDetails(client.get(), "ROLE_CLIENT"));
@@ -46,7 +47,7 @@ public class AuthController {
 
     // Log in Employee
     @PostMapping("/login/employee")
-    public ResponseEntity<?> loginEmployee(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> loginEmployee(@Valid @RequestBody LoginRequest request) {
         var employee = userEmployeeRepository.findByEmail(request.getEmail());
         if (employee.isPresent() && passwordEncoder.matches(request.getPassword(), employee.get().getPasswordHash())) {
             String token = jwtUtil.generateToken(buildUserDetails(employee.get(), "ROLE_EMPLOYEE"));
@@ -58,7 +59,7 @@ public class AuthController {
 
     // Log in ADMIN
     @PostMapping("/login/admin")
-    public ResponseEntity<?> loginAdmin(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> loginAdmin(@Valid @RequestBody LoginRequest request) {
         var admin = userAdminRepository.findByEmail(request.getEmail());
         if (admin.isPresent() && passwordEncoder.matches(request.getPassword(), admin.get().getPasswordHash())) {
             String token = jwtUtil.generateToken(buildUserDetails(admin.get(), "ROLE_ADMIN"));
@@ -70,7 +71,7 @@ public class AuthController {
 
     // Create New client
     @PostMapping("/register/client")
-    public ResponseEntity<?> registerClient(@RequestBody ClientRegisterRequest request) {
+    public ResponseEntity<?> registerClient(@Valid @RequestBody ClientRegisterRequest request) {
         if (userClientRepository.findByEmail(request.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("Email already exists.");
         }
@@ -92,7 +93,7 @@ public class AuthController {
 
     // ✅ تسجيل موظف + JWT
     @PostMapping("/register/employee")
-    public ResponseEntity<?> registerEmployee(@RequestBody EmployeeRegisterRequest request) {
+    public ResponseEntity<?> registerEmployee(@Valid @RequestBody EmployeeRegisterRequest request) {
         if (userEmployeeRepository.findByEmail(request.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("Email already exists.");
         }

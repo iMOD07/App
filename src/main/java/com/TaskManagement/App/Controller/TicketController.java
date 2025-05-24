@@ -1,11 +1,11 @@
 package com.TaskManagement.App.Controller;
 
-
 import com.TaskManagement.App.Dto.TicketRequest;
 import com.TaskManagement.App.Model.*;
 import com.TaskManagement.App.Repository.UserClientRepository;
 import com.TaskManagement.App.Security.SecurityUtils;
 import com.TaskManagement.App.Service.TicketService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,7 +30,7 @@ public class TicketController {
 
     @PreAuthorize("hasRole('CLIENT')")
     @PostMapping("/create")
-    public ResponseEntity<Ticket> createTicket(@RequestBody TicketRequest request,
+    public ResponseEntity<Ticket> createTicket(@Valid @RequestBody TicketRequest request,
                                                Authentication authentication) {
 
         String email = authentication.getName();
