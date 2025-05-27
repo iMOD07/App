@@ -18,6 +18,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin
 @RequestMapping("/api/clients")
 public class ClientController {
 

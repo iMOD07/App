@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin
 @RequestMapping("/api/employees")
 public class EmployeeController {
 

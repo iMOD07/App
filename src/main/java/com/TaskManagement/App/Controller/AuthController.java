@@ -4,7 +4,6 @@ import com.TaskManagement.App.Dto.AuthResponse;
 import com.TaskManagement.App.Dto.ClientRegisterRequest;
 import com.TaskManagement.App.Dto.EmployeeRegisterRequest;
 import com.TaskManagement.App.Dto.LoginRequest;
-import com.TaskManagement.App.Exception.ApiException;
 import com.TaskManagement.App.Model.UserAdmin;
 import com.TaskManagement.App.Model.UserClient;
 import com.TaskManagement.App.Model.UserEmployee;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@CrossOrigin
 public class AuthController {
 
     private final UserClientRepository userClientRepository;
