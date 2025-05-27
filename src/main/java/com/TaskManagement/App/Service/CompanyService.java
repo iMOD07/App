@@ -1,5 +1,6 @@
 package com.TaskManagement.App.Service;
 
+import com.TaskManagement.App.Exception.ApiException;
 import com.TaskManagement.App.Model.Company;
 import com.TaskManagement.App.Model.UserEmployee;
 import com.TaskManagement.App.Repository.CompanyRepository;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,12 +24,15 @@ public class CompanyService {
     public Company registerCompany(String email,
                                    String companyName,
                                    String mobileNumber,
+                                   String responsiblePerson,
                                    String address,
-                                   String vat) {
+                                   String vat,
+                                   LocalDate contractStart,
+                                   LocalDate contractEnd) {
 
         // check if company exists?
         if (companyRepository.existsByCompanyName(companyName)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"This Company is already registered");
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"This Company Name is already registered");
         }
 
         // check if Email exists?
@@ -40,13 +45,31 @@ public class CompanyService {
             throw new ResponseStatusException(HttpStatus.CONFLICT,"This Mobile Number is already registered");
         }
 
+        if (contractEnd.isBefore(contractStart) &&
+                contractEnd.equals(contractStart)){
+            throw new ApiException(
+                    "يجب التأكد من أن تاريخ نهاية العقد بعد تاريخ البداية",
+                    "Contract end date must be after start date."
+            );
+        }
+
+        if (contractStart.equals(contractEnd)){
+            throw new ApiException(
+                    "يجب التأكد من أن تاريخ بةاية العقد لايساوي تاريخ نهاية العقد",
+                    "You must ensure that the contract start date does not equal the contract end date."
+            );
+        }
+
         // now Register Company
         Company company = new Company();
         company.setEmail(email);
         company.setCompanyName(companyName);
         company.setMobileNumber(mobileNumber);
+        company.setResponsiblePerson(responsiblePerson);
         company.setAddress(address);
         company.setVat(vat);
+        company.setContractStart(contractStart);
+        company.setContractEnd(contractEnd);
         return companyRepository.save(company);
     }
 

@@ -35,9 +35,16 @@ public class CompanyRegisterRequest {
     @Column(nullable = false)
     @JsonProperty("mobileNumber")
     @Pattern(
-            regexp = "^(00966|\\+966|0)?5[0-9]{8}$",
+            regexp = "^05[0-9]{8}$",
             message = "Mobile number must be a valid Saudi number starting with 05")
     private String mobileNumber;
+
+    @Column(nullable = false)
+    @JsonProperty("responsiblePerson")
+    @Pattern(
+            regexp = "^[\\p{L} ]+$",
+            message = "Must contain only Arabic or English letters")
+    private String responsiblePerson;
 
 
     @Column(nullable = false)

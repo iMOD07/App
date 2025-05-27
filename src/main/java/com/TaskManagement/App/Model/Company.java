@@ -28,6 +28,9 @@ public class Company {
     private String mobileNumber; //
 
     @Column(nullable = false)
+    private String ResponsiblePerson;
+
+    @Column(nullable = false)
     private String address; //
 
     @Column(nullable = false)
