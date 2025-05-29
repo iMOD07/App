@@ -7,10 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-<<<<<<< HEAD
-=======
 import org.springframework.security.core.Authentication;
->>>>>>> cbefdfa34eadb51b2e38e28191eb98ad17a4b132
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
