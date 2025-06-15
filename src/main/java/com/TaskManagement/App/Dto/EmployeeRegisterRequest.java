@@ -27,7 +27,7 @@ public class EmployeeRegisterRequest {
     @Column(nullable = false)
     @JsonProperty("email")
     @NotBlank(message = "Email is required") // Invalid input error message
-    @ValidCommonEmail(message = "You must email be from a well-known provider such as Gmail or Outlook.")
+    @ValidCommonEmail(message = "You must email be from a well-known provider such as Gmail or Outlook")
     private String email;
 
 
