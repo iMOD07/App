@@ -36,6 +36,10 @@ public class UserEmployee {
     @Column(nullable = false)
     private String jobTitle;
 
+    @Column(nullable = false)
+    private String jobNumber;
+
+
     @CreatedDate
     @JoinColumn(name = " date_created", updatable = false)
     @Column(nullable = false)

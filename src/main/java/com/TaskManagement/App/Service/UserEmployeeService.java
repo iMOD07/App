@@ -25,7 +25,8 @@ public class UserEmployeeService {
                                          String passwordHash,
                                          String mobileNumber,
                                          String department,
-                                         String jobTitle) {
+                                         String jobTitle,
+                                         String jobNumber) {
 
         // Check if email exists?
         if (userEmployeeRepository.existsByEmail(email)) {
@@ -45,6 +46,7 @@ public class UserEmployeeService {
         userEmployee.setMobileNumber(mobileNumber);
         userEmployee.setDepartment(department);
         userEmployee.setJobTitle(jobTitle);
+        userEmployee.setJobNumber(jobNumber);
         return userEmployeeRepository.save(userEmployee);
     }
 

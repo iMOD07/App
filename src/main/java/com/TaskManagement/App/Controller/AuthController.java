@@ -105,7 +105,8 @@ public class AuthController {
                 passwordEncoder.encode(request.getPassword()),
                 request.getMobileNumber(),
                 request.getDepartment(),
-                request.getJobTitle()
+                request.getJobTitle(),
+                request.getJobNumber()
         );
 
         String token = jwtUtil.generateToken(buildUserDetails(employee, "ROLE_EMPLOYEE"));

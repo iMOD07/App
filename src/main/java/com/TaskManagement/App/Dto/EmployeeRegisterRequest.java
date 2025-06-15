@@ -63,4 +63,13 @@ public class EmployeeRegisterRequest {
     private String jobTitle;
 
 
+    @Column(nullable = false)
+    @JsonProperty("jobNumber")
+    @Pattern(
+            regexp = "^[0-9]{5}$",
+            message = "You must enter your job number")
+    private String jobNumber;
+
+
+
 }
