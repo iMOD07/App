@@ -37,7 +37,7 @@ public class CompanyRegisterRequest {
     @JsonProperty("mobileNumber")
     @Pattern(
             regexp = "^05[0-9]{8}$",
-            message = "Mobile number must be a valid Saudi number starting with 05")
+            message = "The Mobile Number must be a valid Saudi number, consisting of 10 digits")
     private String mobileNumber;
 
     @Column(nullable = false)

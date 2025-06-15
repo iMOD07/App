@@ -34,7 +34,8 @@ public class ClientRegisterRequest {
     @JsonProperty("password")
     @Pattern(
             regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$",
-            message = "Password must be at least 8 characters and contain uppercase, lowercase, digit, and special character")
+            message = "Password must contain:\n" + "At least one uppercase letter\n" + "At least one lowercase letter\n" + "At least one number\n" + "At least one special character (e.g., @, #, !, etc.)"
+    )
     private String password;
 
 
@@ -42,7 +43,7 @@ public class ClientRegisterRequest {
     @JsonProperty("mobileNumber")
     @Pattern(
             regexp = "^05[0-9]{8}$",
-            message = "The Mobile Number must be a valid Saudi number, consisting of 10 digits and starting with 05")
+            message = "The Mobile Number must be a valid Saudi number, consisting of 10 digits")
     private String mobileNumber;
 
 
