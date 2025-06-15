@@ -2,6 +2,9 @@ package com.TaskManagement.App.Model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -32,6 +35,11 @@ public class UserEmployee {
 
     @Column(nullable = false)
     private String jobTitle;
+
+    @CreatedDate
+    @JoinColumn(name = " date_created", updatable = false)
+    @Column(nullable = false)
+    private LocalDateTime  dateCreated = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

@@ -4,6 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -35,6 +38,11 @@ public class UserClient {
 
     @Column(nullable = false)
     private String address;
+
+    @CreatedDate
+    @JoinColumn(name = " date_created", updatable = false)
+    @Column(nullable = false)
+    private LocalDateTime dateCreated = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

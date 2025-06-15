@@ -1,5 +1,6 @@
 package com.TaskManagement.App.Dto;
 
+import com.TaskManagement.App.validation.ValidCommonEmail;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
@@ -26,7 +27,7 @@ public class EmployeeRegisterRequest {
     @Column(nullable = false)
     @JsonProperty("email")
     @NotBlank(message = "Email is required") // Invalid input error message
-    @Email(message = "Email format is invalid") // You must enter a valid email address.
+    @ValidCommonEmail(message = "You must email be from a well-known provider such as Gmail or Outlook.")
     private String email;
 
 
@@ -60,5 +61,6 @@ public class EmployeeRegisterRequest {
             regexp = "^[\\p{L} ]+$",
             message = "Must contain only Arabic or English letters")
     private String jobTitle;
+
 
 }
