@@ -18,8 +18,8 @@ public class ClientRegisterRequest {
     @Column(nullable = false)
     @JsonProperty("fullName")
     @Pattern(
-            regexp = "^[\\p{L} ]+$",
-            message = "Full name must not contain numbers or symbols") // Arabic and English names without numbers or symbols.
+            regexp = "^[\\p{IsArabic}a-zA-Z]{3,}$",
+            message = "Full name must contain only Arabic or English letters and be at least 3 characters long")
     private String fullName;
 
 

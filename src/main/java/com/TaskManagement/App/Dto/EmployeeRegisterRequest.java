@@ -19,9 +19,11 @@ public class EmployeeRegisterRequest {
     @Column(nullable = false)
     @JsonProperty("fullName")
     @Pattern(
-            regexp = "^[\\p{L} ]+$",
-            message = "Full name must not contain numbers or symbols") // Arabic and English names without numbers or symbols.
+            regexp = "^[\\p{IsArabic}a-zA-Z]{3,}$",
+            message = "Full name must contain only Arabic or English letters and be at least 3 characters long")
     private String fullName;
+
+
 
 
     @Column(nullable = false)
@@ -35,7 +37,7 @@ public class EmployeeRegisterRequest {
     @JsonProperty("password")
     @Pattern(
             regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$",
-            message = "Password must be at least 8 characters and contain uppercase, lowercase, digit, and special character")
+            message = "Password must contain:\n" + "At least one uppercase letter\n" + "At least one lowercase letter\n" + "At least one number\n" + "At least one special character (e.g., @, #, !, etc.)")
     private String password;
 
 
@@ -67,7 +69,7 @@ public class EmployeeRegisterRequest {
     @JsonProperty("jobNumber")
     @Pattern(
             regexp = "^[0-9]{5}$",
-            message = "You must enter your job number")
+            message = "You must enter your 5-digit job number")
     private String jobNumber;
 
 
